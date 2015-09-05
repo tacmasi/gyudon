@@ -212,7 +212,7 @@ mainoutput(4)
 
 sink(outputfile,append=T)
 
-cat("データ元：\n -松屋:「バイトル(時間：「昼」) http://www.baitoru.com/aspjlist/?st=1&ASP_MGR_NO=4254&ASP_VALUE=asp%3A1013&ASP_KEYWORD=-&page=1 \n -吉野家：「バイトル(検索ワード:\"-\")」http://www.baitoru.com/aspjlist/?st=2&ASP_MGR_NO=3706&ASP_VALUE=&ASP_KEYWORD=-&page=1 \n -すき家：「すき家公式サイト(検索ワード:\"-\")」http://jobs.sukiya.jp/shops?k=-&page=1 \n")
+cat("データ元：\n -松屋:「バイトル(時間：「昼」)http://www.matswork.biz/op182246/alist/tst2/ \n -吉野家：「バイトル(検索ワード:\"-\")」http://www.baitoru.com/aspjlist/?st=2&ASP_MGR_NO=4147&ASP_VALUE=&ASP_KEYWORD=-&page=1 \n -すき家：「すき家公式サイト(検索ワード:\"-\")」http://jobs.sukiya.jp/shops?k=-&page=1 \n")
 cat("データは下記リンク先の通りです \n https://raw.githubusercontent.com/tacmasi/gyudon/master/all_gyudon.csv \n")
 #出力先戻す
 sink()

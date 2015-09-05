@@ -7,13 +7,17 @@ getwage(){
 	grep "\">時給" nowdetailpage.html|sed 's/給 /z/g'|sed 's/円/z/g'|cut -dz -f2|sed 's/,//g' >>wage.tmp
 #店舗一覧get
 
-	grep "h4" nowdetailpage.html|head -1|sed 's/>/</g'|cut -d'<' -f5 >>name.tmp
+	grep "h4" nowdetailpage.html|grep "span02"|head -1|sed 's/>/</g'|cut -d'<' -f5 >>name.tmp
 #勤務地get
 	grep -A2 "勤務地" nowdetailpage.html|head -3|tail -1|cut -d'<' -f1|sed 's/\s//g'|sed 's/,//g' >>place.tmp
 }
 
 getpage(){
-	wget -q http://www.baitoru.com/aspjlist/?st=1\&ASP_MGR_NO=4254\&ASP_VALUE=asp%3A1013\&ASP_KEYWORD=\&page=$1 -O nowdown.html
+
+	wget -q http://www.matswork.biz/op182246/alist/tst2/page$1/ -O nowdown.html
+	if [ $1 -eq 1 ];then
+	wget -q http://www.matswork.biz/op182246/alist/tst2/ -O nowdown.html
+	fi
 }
 pagecheck(){
 	dwncnt=$(grep -c "内容を詳しく" nowdown.html)
@@ -22,7 +26,7 @@ pagecheck(){
 getdetailpage(){
 	#詳細ページをget
 	detail_a=$(grep "内容を詳しく" nowdown.html|cut -d\" -f2 | head -$1 |tail -1)
-	wget -q http://www.baitoru.com$detail_a -O nowdetailpage.html
+	wget -q $detail_a -O nowdetailpage.html
 }
 
 dwncnt=1

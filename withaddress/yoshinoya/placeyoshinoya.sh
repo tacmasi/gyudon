@@ -13,7 +13,7 @@ getwage(){
 }
 
 getpage(){
-	wget -q http://www.baitoru.com/aspjlist/?st=2\&ASP_MGR_NO=3706\&ASP_VALUE=\&ASP_KEYWORD=-\&page=$1 -O nowdown.html
+	wget -q http://www.baitoru.com/aspjlist/?st=2\&ASP_MGR_NO=4147\&ASP_VALUE=\&ASP_KEYWORD=-\&page=$1 -O nowdown.html
 }
 pagecheck(){
 	dwncnt=$(grep -c "内容を詳しく" nowdown.html)

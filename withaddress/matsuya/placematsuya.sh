@@ -5,9 +5,14 @@ todaydate=$(date +%Y%m%d)
 getwage(){
 #時給一覧get
 #20150926変更	grep "\">時給" nowdetailpage.html|sed 's/給 /z/g'|sed 's/円/z/g'|cut -dz -f2|sed 's/,//g' >>wage.tmp
-	grep "\[1\]時給" nowdetailpage.html |sed 's/　//g'|sed 's/ //g'|sed 's/,//g'|sed 's/給/Y/g'|sed 's/円/Y/g'|cut -dY -f2 >>wage.tmp
+#20151205変更	grep "\[1\]時給" nowdetailpage.html |sed 's/　//g'|sed 's/ //g'|sed 's/,//g'|sed 's/給/Y/g'|sed 's/円/Y/g'|cut -dY -f2 >>wage.tmp
+
+
+grep -A3 "給与" nowdetailpage.html|grep "時給"|head -1|sed 's/ //g'|sed 's/　//g'|sed 's/,//g'|sed 's/給/Y/g'|sed 's/円/Y/g'|cut -dY -f2 >>wage.tmp
+
 #店舗一覧get
 #20150926変更	grep "h4" nowdetailpage.html|grep "span02"|head -1|sed 's/>/</g'|cut -d'<' -f5 >>name.tmp
+
 	grep  "勤務先：" nowdetailpage.html|sed 's/：/</g'|cut -d\< -f2|head -1 >>name.tmp
 #勤務地get
 #20150926変更	grep -A2 "勤務地" nowdetailpage.html|head -3|tail -1|cut -d'<' -f1|sed 's/\s//g'|sed 's/,//g' >>place.tmp

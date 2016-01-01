@@ -4,17 +4,12 @@ rm *.tmp *.html
 todaydate=$(date +%Y%m%d)
 getwage(){
 #時給get
-#20150926変更   grep "\">時給" nowdetailpage.html|sed 's/給 /z/g'|sed 's/円/z/g'|cut -dz -f2|sed 's/,//g' >>wage.tmp
-#20151205変更        grep "\[1\]時給" nowdetailpage.html |sed 's/　//g'|sed 's/ //g'|sed 's/,//g'|sed 's/給/Y/g'|sed 's/円/Y/g'|cut -dY -f2 >>wage.tmp
-
 
 grep -A3 "給与" nowdetailpage.html|grep "時給"|head -1|sed 's/ //g'|sed 's/　//g'|sed 's/,//g'|sed 's/給/Y/g'|sed 's/円/Y/g'|cut -dY -f2 >>wage.tmp
 
 #店舗名get
-#20150926変更   grep "h4" nowdetailpage.html|grep "span02"|head -1|sed 's/>/</g'|cut -d'<' -f5 >>name.tmp
         grep  "勤務先：" nowdetailpage.html|sed 's/：/</g'|cut -d\< -f2|head -1 >>name.tmp
 #勤務地get
-#20150926変更   grep -A2 "勤務地" nowdetailpage.html|head -3|tail -1|cut -d'<' -f1|sed 's/\s//g'|sed 's/,//g' >>place.tmp
         grep  "勤務先：" nowdetailpage.html|sed 's/>/</g'|cut -d\< -f3|head -1|sed 's/\t//g'|sed 's/,//g'|sed 's/　//g' >>place.tmp
 }
 
@@ -27,8 +22,13 @@ pagecheck(){
 
 getdetailpage(){
 	#詳細ページをget
+	wget -q $1 -O nowdetailpage.html
+}
+
+getdetailuri(){
+	#詳細ページuriをget
 	detail_a=$(grep "内容を詳しく" nowdown.html|cut -d\" -f2 | head -$1 |tail -1)
-	wget -q http://www.baitoru.com$detail_a -O nowdetailpage.html
+	echo "http://www.baitoru.com$detail_a" >> detailuri.tmp
 }
 
 dwncnt=1
@@ -43,16 +43,30 @@ do
 	fi
 	while [ $dwncnt -ne 0 ]
 	do
-		getdetailpage $dwncnt
-		getwage
+		getdetailuri $dwncnt
 		dwncnt=$(expr $dwncnt - 1)
-		rm nowdetailpage.html
 	done
 	echo "cnt=$cnt"
 	cnt=$(expr $cnt + 1)
 	rm nowdown.html
 done
-paste -d, name.tmp place.tmp wage.tmp > ./data/detail$todaydate.csv
-echo $todaydate >>date.csv
+cnt=1
+#行数
+linec=$(wc -l detailuri.tmp |cut -f1 -d' ')
+while [ $cnt -le $linec ]
+do
+	nowdwuri=$(head -$cnt detailuri.tmp | tail -1)
+	getdetailpage $nowdwuri
+	getwage
+	cnt=$(expr $cnt + 1)
+	rm nowdetailpage.html
+	echo "cnt=$cnt"
+done
+#	cnt=$(expr $cnt + 1)
 
+paste -d, name.tmp place.tmp wage.tmp > today_t.tmp
+#重複削除(同一店舗名では賃金最低の求人を残す)
+cat today_t.tmp |sort -t, -k 1,1 -k 3n |awk -F'[,]' '!a[$1]++ {print $0}' > ./data/detail$todaydate.csv
+echo $todaydate >>date.csv
+echo "data出力了"
 #rm *.tmp *.html

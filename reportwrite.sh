@@ -12,7 +12,8 @@ echo $today "現在、吉野家・松屋・すき家のアルバイト募集状�
 
 ############
 ncol=$(head -1 all_gyudon.csv|awk -F, '{print NF}')
-#配列 [吉野家、松屋、すき家]
+#配列 [吉野家、松屋、すき家、合計]
+#求人数店舗数
 totalq=(0 0 0 0)
 #totalstorefunc(1,2)#1:storetype, #2:id:0:吉野家,1:松屋,2:すき家
 totalstorefunc(){
@@ -28,7 +29,7 @@ echo "totalq" ${totalq[*]}
 
 #####
 #時給上下
-#配列 [吉野家、松屋、すき家]
+#配列 [吉野家、松屋、すき家、合計]
 upq=(0 0 0 0)
 downq=(0 0 0 0)
 diffq=(0 0 0 0)

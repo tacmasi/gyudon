@@ -1,5 +1,9 @@
 #!/bin/bash
 
+#locale
+#export LC_ALL=C
+#export LANG=C
+
 #copy
 dateline=$(wc -l date.csv|cut -f1 -d' ')
 cp ./data/detail$(head -1 date.csv).csv ./data/detail.csv
@@ -18,8 +22,8 @@ fieldsize=$(head -1  ./data/detail.csv|sed 's/ //g'|sed 's/　//g'|sed 's/,/ /g'
 #本日のデータ
 todaydate=$(head -$1 date.csv|tail -1)
 #データソート
-sort -k1 -t, ./data/detail.csv >./data/a.tmp
-sort -k1 -t, ./data/detail$todaydate.csv >./data/b.tmp
+sort -k 1,1 -t, ./data/detail.csv >./data/a.tmp
+sort -k 1,1 -t, ./data/detail$todaydate.csv >./data/b.tmp
 
 #結合
 join -11 -21 -t, ./data/a.tmp ./data/b.tmp >./data/join1.tmp
@@ -74,3 +78,5 @@ do
 	n=$(expr $n + 1)
 done
 echo "Done(｀・ω・´)"
+#unset locale
+unset LC_ALL LANG

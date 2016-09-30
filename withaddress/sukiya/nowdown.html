@@ -160,7 +160,7 @@
 
 <div id="title">
   <h2><img width="489" height="89" alt="「すき家」ではたらく！あなたの街の「すき家」で、みつけよう！明日の自分" src="/images/common/header_title.jpg" /></h2>
-  <div class="search"><a href="https://f.msgs.jp/webapp/form/16573_lny_2/index.do"><img src="/images/common/header_member.png" class="ov" width="100" height="100" alt="今すぐ応募!!" /></a></div>
+  <div class="search"><img src="/images/common/header_member.png" width="100" height="100" alt="今すぐ応募!!" /></div>
 </div>
 <div id="list">
     <h2><img src="/images/shops/list_title.jpg" width="154" height="24" alt="募集情報一覧" /></h2>
@@ -248,9 +248,6 @@
     </div>
   </div>
   <div class="search clearfix">
-    <div class="left"><img src="/images/shops/list_search.jpg" width="120" height="30" alt="検索条件" />
-      「-」を含む
-    </div>
     <div class="right"><a href="/?k=-&amp;page=183"><img src="/images/shops/form_back.jpg" class="ov" width="170" height="30" alt="検索画面へもどる" /></a></div>
   </div>
 </div>
@@ -278,6 +275,13 @@
 <!-- /footer --></div><!-- ===== /common/include/footer.html ===== -->
 
 <!-- /wrapper --></div>
+<script type="text/javascript">
+$('#area_sel').hide();
+$('#acc_btn').click(function () {
+    $(this).next('div#area_sel').slideToggle('fast');
+    $(this).toggleClass('selected');
+});
+</script>
 <script type="text/javascript">
   var _fout_queue = _fout_queue || {}; if (_fout_queue.segment === void 0) _fout_queue.segment = {};
   if (_fout_queue.segment.queue === void 0) _fout_queue.segment.queue = [];

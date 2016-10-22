@@ -4,8 +4,9 @@ rm *.tmp *.html
 todaydate=$(date +%Y%m%d)
 getwage(){
 #時給get
-
-grep -A3 "給与" nowdetailpage.html|grep "時給"|head -1|sed 's/ //g'|sed 's/　//g'|sed 's/,//g'|sed 's/給/Y/g'|sed 's/円/Y/g'|cut -dY -f2 >>wage.tmp
+#-20161022
+#grep -A3 "給与" nowdetailpage.html|grep "時給"|head -1|sed 's/ //g'|sed 's/　//g'|sed 's/,//g'|sed 's/給/Y/g'|sed 's/円/Y/g'|cut -dY -f2 >>wage.tmp
+grep -A3 "給与" nowdetailpage.html|grep "時給"|grep "em"|sed 's/ //g'|sed 's/　//g'|sed 's/,//g'|sed 's/給/Y/g'|sed 's/円/Y/g'|cut -dY -f2 >>wage.tmp
 
 #店舗名get
         grep  "勤務先：" nowdetailpage.html|sed 's/：/</g'|cut -d\< -f2|head -1 >>name.tmp
@@ -14,7 +15,14 @@ grep -A3 "給与" nowdetailpage.html|grep "時給"|head -1|sed 's/ //g'|sed 's/�
 }
 
 getpage(){
-	wget -q http://www.baitoru.com/aspjlist/?st=2\&ASP_MGR_NO=4147\&ASP_VALUE=\&ASP_KEYWORD=-\&page=$1 -O nowdown.html
+#	wget -q http://www.baitoru.com/aspjlist/?st=2\&ASP_MGR_NO=4147\&ASP_VALUE=\&ASP_KEYWORD=-\&page=$1 -O nowdown.html
+#変更20161022〜
+	#wget -q http://www.baitoru.com/op71872/alist/tst2_btp1/wrd-/page$1/ -O nowdown.html
+	if [ $1 -eq 1 ];then	
+		wget -q  http://www.baitoru.com/op71872/alist/tst2_btp1/wrd-/ -O nowdown.html
+	else
+		wget -q  http://www.baitoru.com/op71872/alist/tst2_btp1/wrd-/page$1/ -O nowdown.html
+	fi
 }
 pagecheck(){
 	dwncnt=$(grep -c "内容を詳しく" nowdown.html)
@@ -28,7 +36,9 @@ getdetailpage(){
 getdetailuri(){
 	#詳細ページuriをget
 	detail_a=$(grep "内容を詳しく" nowdown.html|cut -d\" -f2 | head -$1 |tail -1)
-	echo "http://www.baitoru.com$detail_a" >> detailuri.tmp
+	#echo "http://www.baitoru.com$detail_a" >> detailuri.tmp
+	#20161022変更
+	echo "$detail_a" >> detailuri.tmp
 }
 
 dwncnt=1

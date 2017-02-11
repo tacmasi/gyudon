@@ -6,7 +6,9 @@
 
 #copy
 dateline=$(wc -l date.csv|cut -f1 -d' ')
-cp ./data/detail$(head -1 date.csv).csv ./data/detail.csv
+#cp ./data/detail$(head -1 date.csv).csv ./data/detail.csv
+#スペース半角化
+cat ./data/detail$(head -1 date.csv).csv|sed 's/　/ /g' > ./data/detail.csv
 ##
 
 #処理
@@ -23,7 +25,9 @@ fieldsize=$(head -1  ./data/detail.csv|sed 's/ //g'|sed 's/　//g'|sed 's/,/ /g'
 todaydate=$(head -$1 date.csv|tail -1)
 #データソート
 sort -k 1,1 -t, ./data/detail.csv >./data/a.tmp
-sort -k 1,1 -t, ./data/detail$todaydate.csv >./data/b.tmp
+#&スペース半角化
+#sort -k 1,1 -t, ./data/detail$todaydate.csv >./data/b.tmp
+cat ./data/detail$todaydate.csv|sed 's/　/ /g'|sort -k 1,1 -t, >./data/b.tmp
 
 #結合
 join -11 -21 -t, ./data/a.tmp ./data/b.tmp >./data/join1.tmp

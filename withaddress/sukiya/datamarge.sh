@@ -3,6 +3,7 @@
 #locale
 #export LC_ALL=C
 #export LANG=C
+export LC_COLLATE=ja_JP.utf8
 
 #copy
 dateline=$(wc -l date.csv|cut -f1 -d' ')

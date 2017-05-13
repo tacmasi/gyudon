@@ -4,7 +4,8 @@ rm *.tmp *.html
 todaydate=$(date +%Y%m%d)
 getwage(){
 #時給一覧get
-	grep "時給&nbsp;" nowdetailpage.html|sed -e 's/&nbsp;/>/g'|sed -e 's/円/>/g'|cut -d'>' -f3 |sed 's/,//g'>>wage.tmp
+#	grep "時給&nbsp;" nowdetailpage.html|sed -e 's/&nbsp;/>/g'|sed -e 's/円/>/g'|cut -d'>' -f3 |sed 's/,//g'>>wage.tmp
+	grep "時給&nbsp" nowdetailpage.html|sed -e 's/;/円/g' -e 's/,//g'|awk -F'円' 'NR==1{print $2}'>>wage.tmp
 #店舗一覧get
 	grep -A1 "募集店舗" nowdetailpage.html|tail -1|sed -e 's/>/</g'|cut -d'<' -f3 >>name.tmp
 #勤務地get

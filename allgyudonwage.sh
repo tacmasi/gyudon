@@ -10,6 +10,11 @@ awk -F, '{print "すき家," substr($2,1,9) "," $0 }' ./withaddress/sukiya/data/
 cat yoshinoya.tmp >all_gyudon.csv
 cat matsuya.tmp >>all_gyudon.csv
 cat sukiya.tmp >>all_gyudon.csv
+####無効データomit
+cat all_gyudon.csv | sed -e 's/時給//g' -e 's/〜//g' > tmp
+mv tmp all_gyudon.csv
+rm tmp
+####
 echo "all_gyudon.csv に時給データを保存しました"
 
 ##colname

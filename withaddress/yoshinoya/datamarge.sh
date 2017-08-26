@@ -11,7 +11,7 @@ dateline=$(wc -l date.csv|cut -f1 -d' ')
 #スペース半角化
 #cat ./data/detail$(head -1 date.csv).csv|sed 's/　/ /g' > ./data/detail.csv
 #全角→半角
-cat ./data/detail$(head -1 date.csv).csv|sed 's/　/ /g'|sed 'y/ＡＢＣＤＥＦＧＨＩＪＫＬＭＮＯＰＱＲＳＴＵＶＷＸＹＺ１２３４５６７８９０/ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890/' -e 's/R//g'> ./data/detail.csv
+cat ./data/detail$(head -1 date.csv).csv|sed 's/　/ /g'|sed 'y/ＡＢＣＤＥＦＧＨＩＪＫＬＭＮＯＰＱＲＳＴＵＶＷＸＹＺ１２３４５６７８９０/ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890/' |sed 's/R//g'> ./data/detail.csv
 ##
 
 #処理
@@ -37,7 +37,7 @@ sort -k 1,1 -t, ./data/detail.csv >./data/a.tmp
 #sort -k 1,1 -t, ./data/detail$todaydate.csv >./data/b.tmp
 #cat ./data/detail$todaydate.csv|sed 's/　/ /g'|sort -k 1,1 -t, >./data/b.tmp
 echo "trans"
-cat ./data/detail$todaydate.csv|sed 's/　/ /g'|sed 'y/ＡＢＣＤＥＦＧＨＩＪＫＬＭＮＯＰＱＲＳＴＵＶＷＸＹＺ１２３４５６７８９０/ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890/' -e 's/R//g'|sort -k 1,1 -t, >./data/b.tmp
+cat ./data/detail$todaydate.csv|sed 's/　/ /g'|sed 'y/ＡＢＣＤＥＦＧＨＩＪＫＬＭＮＯＰＱＲＳＴＵＶＷＸＹＺ１２３４５６７８９０/ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890/'| sed -e 's/R//g'|sort -k 1,1 -t, >./data/b.tmp
 
 echo "trans done"
 #結合

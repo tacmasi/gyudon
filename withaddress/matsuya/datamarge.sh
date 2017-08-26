@@ -7,7 +7,9 @@ export LC_COLLATE=ja_JP.utf8
 
 #copy
 dateline=$(wc -l date.csv|cut -f1 -d' ')
-cp ./data/detail$(head -1 date.csv).csv ./data/detail.csv
+#cp ./data/detail$(head -1 date.csv).csv ./data/detail.csv
+cp ./data/detail$(head -1 date.csv).csv tmp.tmp
+cat tmp.tmp | sed -e 's/　/ /g' -e 's/[R|Ｒ]//g' > ./data/detail.csv
 ##
 
 #処理
@@ -15,6 +17,7 @@ cp ./data/detail$(head -1 date.csv).csv ./data/detail.csv
 func() {
 #temp削除
 rm ./data/*.tmp
+rm ./*.tmp
 
 #メインデータフィールド数
 fieldsize=$(head -1  ./data/detail.csv|sed 's/ //g'|sed 's/　//g'|sed 's/,/ /g'|wc -w)
@@ -24,7 +27,9 @@ fieldsize=$(head -1  ./data/detail.csv|sed 's/ //g'|sed 's/　//g'|sed 's/,/ /g'
 todaydate=$(head -$1 date.csv|tail -1)
 #データソート
 sort -k 1,1 -t, ./data/detail.csv >./data/a.tmp
-sort -k 1,1 -t, ./data/detail$todaydate.csv >./data/b.tmp
+#sort -k 1,1 -t, ./data/detail$todaydate.csv >./data/b.tmp
+cat ./data/detail$todaydate.csv | sed -e 's/　/ /g' -e 's/[R|Ｒ]//g' >tmpdm.tmp
+sort -k 1,1 -t, tmpdm.tmp >./data/b.tmp
 
 #結合
 join -11 -21 -t, ./data/a.tmp ./data/b.tmp >./data/join1.tmp

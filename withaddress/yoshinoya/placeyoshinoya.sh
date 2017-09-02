@@ -6,12 +6,27 @@ getwage(){
 #時給get
 #-20161022
 #grep -A3 "給与" nowdetailpage.html|grep "時給"|head -1|sed 's/ //g'|sed 's/　//g'|sed 's/,//g'|sed 's/給/Y/g'|sed 's/円/Y/g'|cut -dY -f2 >>wage.tmp
-grep -A3 "給与" nowdetailpage.html|grep "時給"|grep "em"|sed 's/ //g'|sed 's/　//g'|sed 's/,//g'|sed 's/給/Y/g'|sed 's/円/Y/g'|cut -dY -f2 >>wage.tmp
+#-20170831
+#grep -A3 "給与" nowdetailpage.html|grep "時給"|grep "em"|sed 's/ //g'|sed 's/　//g'|sed 's/,//g'|sed 's/給/Y/g'|sed 's/円/Y/g'|cut -dY -f2 >>wage.tmp
+grep -A3 "時給" nowdetailpage.html | grep \<em\> | sed -e 's/給/Y/' -e 's/円/Y/' -e 's/,//'|awk -F'Y' 'NR==1{print $2 } '  >> wage.tmp
+#echo
+echo $(grep -A3 "時給" nowdetailpage.html | grep \<em\> | sed -e 's/給/Y/' -e 's/円/Y/' -e 's/,//'|awk -F'Y' 'NR==1{print $2 } ')
 
 #店舗名get
-        grep  "勤務先：" nowdetailpage.html|sed 's/：/</g'|cut -d\< -f2|head -1 >>name.tmp
+#-20170831
+#grep  "勤務先：" nowdetailpage.html|sed 's/：/</g'|cut -d\< -f2|head -1 >>name.tmp
+
+grep -A3 "勤務先" nowdetailpage.html |head -2|tail -1|sed -e 's/>/</'|awk -F\< 'NR==1{print $3}' >>name.tmp
+#echo
+echo $(grep -A3 "勤務先" nowdetailpage.html |head -2|tail -1|sed -e 's/>/</'|awk -F\< 'NR==1{print $3}')
 #勤務地get
-        grep  "勤務先：" nowdetailpage.html|sed 's/>/</g'|cut -d\< -f3|head -1|sed 's/\t//g'|sed 's/,//g'|sed 's/　//g' >>place.tmp
+#-20170831
+#grep  "勤務先：" nowdetailpage.html|sed 's/>/</g'|cut -d\< -f3|head -1|sed 's/\t//g'|sed 's/,//g'|sed 's/　//g' >>place.tmp
+ 
+grep -A2  "住所" nowdetailpage.html|head -2|tail -1|sed -e 's/>/</'|awk -F\< 'NR==1{print $3}' >>place.tmp
+#echo
+echo $(grep -A2  "住所" nowdetailpage.html|head -2|tail -1|sed -e 's/>/</'|awk -F\< 'NR==1{print $3}')
+
 }
 
 getpage(){
@@ -25,20 +40,28 @@ getpage(){
 	fi
 }
 pagecheck(){
-	dwncnt=$(grep -c "内容を詳しく" nowdown.html)
+		#詳細記載URL
+	#-20170831
+	#dwncnt=$(grep -c "内容を詳しく" nowdown.html)
+	dwncnt=$(grep -c job_mgr_no nowdown.html)
 }
 
 getdetailpage(){
 	#詳細ページをget
 	wget -q $1 -O nowdetailpage.html
+	echo $1
 }
 
 getdetailuri(){
 	#詳細ページuriをget
-	detail_a=$(grep "内容を詳しく" nowdown.html|cut -d\" -f2 | head -$1 |tail -1)
+	#detail_a=$(grep "内容を詳しく" nowdown.html|cut -d\" -f2 | head -$1 |tail -1)
 	#echo "http://www.baitoru.com$detail_a" >> detailuri.tmp
 	#20161022変更
-	echo "$detail_a" >> detailuri.tmp
+	#20180831
+	#echo "$detail_a" >> detailuri.tmp
+
+	grep job_mgr_no nowdown.html|awk -F\" '{print "http://www.baitoru.com/op71872/job"$2"/"}' >> detailuri.tmp
+
 }
 
 dwncnt=1
@@ -51,18 +74,18 @@ do
 	if [ $dwncnt -eq 0 ];then
 		break
 	fi
-	while [ $dwncnt -ne 0 ]
-	do
+	#while [ $dwncnt -ne 0 ]
+	#do
 		getdetailuri $dwncnt
-		dwncnt=$(expr $dwncnt - 1)
-	done
+	#	dwncnt=$(expr $dwncnt - 1)
+	#done
 	echo "cnt=$cnt"
 	cnt=$(expr $cnt + 1)
 	rm nowdown.html
 done
 cnt=1
 #行数
-linec=$(wc -l detailuri.tmp |cut -f1 -d' ')
+linec=$(cat detailuri.tmp | wc -l)
 while [ $cnt -le $linec ]
 do
 	nowdwuri=$(head -$cnt detailuri.tmp | tail -1)

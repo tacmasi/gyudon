@@ -134,7 +134,17 @@ else
 	echo $today "において、前回集計時(" $pastday ")以降日中求人を停止した店舗はありません。" >>$outputfile
 fi
 echo "<hr>">>$outputfile
-
+#########対前月比
+echo "<br>">>$outputfile
+echo "<hr>">>$outputfile
+echo "時系列での各店舗時給上昇件数(対4週前比)は下記の通りです。">>$outputfile
+echo "|*Date|*吉野家[件]|*松屋[件]|*すき家[件]|上昇店舗計[件]|">>$outputfile
+for i in $(seq 0 4 60)
+do
+cat all_gyudon_colnameon.csv|awk -F, -v l="$i" 'NR==1{print} NR!=1 && $(NF-l)>$(NF-l-4){print}'|awk -F, -v l="$i" 'BEGIN{y=0;m=0;s=0}NR==1{d=$(NF-l)}$1=="吉野家"{y++} $1=="松屋"{m++} $1=="すき家"{s++} END{print "|"d"|" y"|" m"|"  s"|" NR"|" }' >>$outputfile
+done
+echo "<hr>">>$outputfile
+#########対前月比
 #取得元変更20161022
 #echo -e "データ元：\n -松屋:「バイトル(時間：「昼」)http://www.matswork.biz/op182246/alist/tst2/ \n -吉野家：「バイトル(検索ワード:\"-\")」http://www.baitoru.com/aspjlist/?st=2&ASP_MGR_NO=4147&ASP_VALUE=&ASP_KEYWORD=-&page=1 \n -すき家：「すき家公式サイト(検索ワード:\"-\")」http://jobs.sukiya.jp/shops?k=-&page=1 \n" >>$outputfile
 echo -e "データ元：\n -松屋:「バイトル(時間：「昼」)http://www.matswork.biz/op182246/alist/tst2/ \n -吉野家：「バイトル(検索ワード:\"-\")」 http://www.baitoru.com/op71872/alist/tst2_btp1/wrd-/ \n -すき家：「すき家公式サイト(検索ワード:\"-\")」http://jobs.sukiya.jp/shops?k=-&page=1 \n" >>$outputfile

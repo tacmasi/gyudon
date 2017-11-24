@@ -34,9 +34,9 @@ getpage(){
 #変更20161022〜
 	#wget -q http://www.baitoru.com/op71872/alist/tst2_btp1/wrd-/page$1/ -O nowdown.html
 	if [ $1 -eq 1 ];then	
-		wget -q  http://www.baitoru.com/op71872/alist/tst2_btp1/wrd-/ -O nowdown.html
+	wget -q  http://www.yoshinoya.com/baito/op71872/alist/tst2_btp1/wrd-/ -O nowdown.html
 	else
-		wget -q  http://www.baitoru.com/op71872/alist/tst2_btp1/wrd-/page$1/ -O nowdown.html
+		wget -q  http://www.yoshinoya.com/baito/op71872/alist/tst2_btp1/wrd-/page$1/ -O nowdown.html
 	fi
 }
 pagecheck(){
@@ -60,7 +60,7 @@ getdetailuri(){
 	#20180831
 	#echo "$detail_a" >> detailuri.tmp
 
-	grep job_mgr_no nowdown.html|awk -F\" '{print "http://www.baitoru.com/op71872/job"$2"/"}' >> detailuri.tmp
+	grep job_mgr_no nowdown.html|awk -F\" '{print "http://www.yoshinoya.com/baito/op71872/job"$2"/"}' >> detailuri.tmp
 
 }
 

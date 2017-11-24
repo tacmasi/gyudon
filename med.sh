@@ -1,5 +1,5 @@
 #/bin/bash
-echo Date Min 1stQ Median 3rdQ Max >quartile.tsv
+echo Date Min 1stQ Median 3rdQ Max mean >quartile.tsv
 #フィールド数検出
 nf=$(head -1 all_gyudon.csv|awk -F, '{print NF}')
 
@@ -9,9 +9,9 @@ do
 #$timeFでの時給抽出
 DataDate=$(head -1 all_gyudon_colnameon.csv|awk -F, '{print $'"$timeF"'}')
 #求人中店舗数検出
-totalRow=$(cat all_gyudon.csv|awk -F, 'BEGIN{timeF='"$timeF"'} $timeF!="NA"{print $timeF}'|wc -l)
+totalRow=$(cat all_gyudon.csv|awk -F, 'BEGIN{timeF='"$timeF"'; t1=0} $timeF!="" &&$timeF!="～"&& $timeF!="NA"&&$timeF>500{t1=t1+1}END{print t1}')
 
-cat all_gyudon.csv|awk -F, 'BEGIN{timeF='"$timeF"'} $timeF!="NA"{print $timeF}'|sort -n|awk '
+cat all_gyudon.csv|awk -F, 'BEGIN{timeF='"$timeF"'} $timeF!= "" && $timeF!= "NA"&&$timeF!="～" && $timeF>500{print $timeF}'|sort -n|awk '
 BEGIN{tRow='"$totalRow"';
 FstQR=int(tRow/4);
 FstQR_C=tRow/4-FstQR;
@@ -28,7 +28,8 @@ NR==MedR+1{Med+=$0 * MedR_C}
 NR==SrdQR{SrdQ=$0 * (1 - SrdQR_C)}
 NR==SrdQR+1{SrdQ+=$0 * SrdQR_C}
 NR==tRow{Max=$0}
-END{print '"$DataDate"',Min,FstQ,Med,SrdQ,Max}' >>quartile.tsv
+{sum+=$0}
+END{print '"$DataDate"',Min,FstQ,Med,SrdQ,Max,sum/NR}' >>quartile.tsv
 done
 
 echo 四分位点の時系列データを quartile.tsv へ保存しました

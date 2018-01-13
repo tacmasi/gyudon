@@ -7,7 +7,9 @@ export LC_COLLATE=ja_JP.utf8
 
 #copy
 dateline=$(wc -l date.csv|cut -f1 -d' ')
-cp ./data/detail$(head -1 date.csv).csv ./data/detail.csv
+echo "N = 1"
+#第1期データをコピー(半角to全角を噛ませる)
+./kana_han2zen.gawk ./data/detail$(head -1 date.csv).csv > ./data/detail.csv
 ##
 
 #処理
@@ -16,55 +18,52 @@ func() {
 #temp削除
 rm ./data/*.tmp
 
-#メインデータフィールド数
-fieldsize=$(head -1  ./data/detail.csv|sed 's/ //g'|sed 's/　//g'|sed 's/,/ /g'|wc -w)
+#現在のメインデータフィールド数
+fieldsize=$(head -1  ./data/detail.csv|sed -e 's/ //g' -e 's/　//g' -e 's/,/ /g'|wc -w)
 
 
 #本日のデータ
 todaydate=$(head -$1 date.csv|tail -1)
-#データソート
+#データソートしてa.tmpへ
 sort -k1,1 -t, ./data/detail.csv >./data/a.tmp
-sort -k1,1 -t, ./data/detail$todaydate.csv >./data/b.tmp
+#todaydate分b.tmpへ(半角to全角を噛ませる)
+./kana_han2zen.gawk ./data/detail$todaydate.csv |sort -k1,1 -t, >./data/b.tmp
 
-#結合
+#detailへtodaydate分を結合
 join -11 -21 -t, ./data/a.tmp ./data/b.tmp >./data/join1.tmp
 cut -d, -f1,2,3-$fieldsize,$(expr $fieldsize + 2) ./data/join1.tmp > ./data/join2.tmp
-echo "line 28"
-#matchしなかったもの
+#matchしなかったもの(停止店舗)
 #元ファイルのみ
 join -11 -21 -t, -v1 ./data/a.tmp ./data/b.tmp >./data/detail_a.tmp
-er1f=$(wc -l  ./data/detail_a.tmp|cut -d' ' -f1 )
 
-echo "line 33"
-while [ $er1f -ne 0 ]
-do
-	echo $(tail -$er1f ./data/detail_a.tmp|head -1)",NA" >>./data/da.tmp
-	er1f=$(expr $er1f - 1)
-done
+#停止店舗について、最新時給にNA代入
+#※ fsize+1th col ( 最新データ )へNA挿入
+cat ./data/detail_a.tmp | gawk -F, '{
+	printf $0",NA\n";
+}'>./data/da.tmp
+
 #新規店舗
 join -11 -21 -t, -v2 ./data/a.tmp ./data/b.tmp >./data/detail_b.tmp
-er2f=$(wc -l  ./data/detail_b.tmp|cut -d' ' -f1 )
 
-echo "line 44"
-while [ $er2f -ne 0 ]
-do
-	tmpb_w=$(tail -$er2f ./data/detail_b.tmp|head -1|cut -d, -f3)
-	tmpb=$(tail -$er2f ./data/detail_b.tmp|head -1|cut -d, -f1,2)
-	ib=2
-	while [ $ib -lt $fieldsize ]
-	do
-		tmpb=$(echo $tmpb",NA")
-		ib=$(expr $ib + 1)
-	done
-	echo $tmpb","$tmpb_w>>./data/db.tmp
-	er2f=$(expr $er2f - 1)
-done
-
+#新規店について、募集前時給にNA代入
+#(3rd col to fsize col)へNA ※ fsize+1th col = 最新データ
+cat ./data/detail_b.tmp|gawk -F, -v fsize="$fieldsize" '{
+		printf $1","$2",";
+		ib=3;
+		while( ib < fsize + 1 ){
+				printf "NA,";
+				ib++
+		}
+		printf $3"\n";
+}' > ./data/db.tmp
+#
+#データ出力
 cat ./data/join2.tmp>./data/detail.csv
+#停止店舗データ出力
 cat ./data/da.tmp>>./data/detail.csv
+#新規店舗データ出力
 cat ./data/db.tmp>>./data/detail.csv
 
-echo $1
 
 #重複削除
 uniq ./data/detail.csv > ./data/uni1.tmp
@@ -72,9 +71,11 @@ cp ./data/uni1.tmp  ./data/detail.csv
 #半角スペースを置換
 sed 's/&nbsp;//g' detail.csv > detail.csv
 }
+
 n=2
 while [ $n -le $dateline ];
 do
+	echo "N = " $n
 	func $n
 	n=$(expr $n + 1)
 done

@@ -2,9 +2,9 @@
 
 ##################データ生成start
 ##storetype, prefecture, storename, address, wage1,wage2,...wageN
-awk -F, '{print "吉野家," substr($2,1,9) "," $0 }' ./withaddress/yoshinoya/data/detail.csv > yoshinoya.tmp
-awk -F, '{print "松屋," substr($2,1,9) "," $0 }' ./withaddress/matsuya/data/detail.csv > matsuya.tmp
-awk -F, '{print "すき家," substr($2,1,9) "," $0 }' ./withaddress/sukiya/data/detail.csv > sukiya.tmp
+gawk -F, '{print "吉野家," substr($2,1,3) "," $0 }' ./withaddress/yoshinoya/data/detail.csv > yoshinoya.tmp
+gawk -F, '{print "松屋," substr($2,1,3) "," $0 }' ./withaddress/matsuya/data/detail.csv > matsuya.tmp
+gawk -F, '{print "すき家," substr($2,1,3) "," $0 }' ./withaddress/sukiya/data/detail.csv > sukiya.tmp
 
 ##データ出力
 cat yoshinoya.tmp >all_gyudon.csv

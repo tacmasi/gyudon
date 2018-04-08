@@ -43,7 +43,9 @@ pagecheck(){
 		#詳細記載URL
 	#-20170831
 	#dwncnt=$(grep -c "内容を詳しく" nowdown.html)
-	dwncnt=$(grep -c job_mgr_no nowdown.html)
+	#dwncnt=$(grep -c job_mgr_no nowdown.html)
+	#20180407
+	dwncnt=$(cat nowdown.html |grep h3|grep href|grep -c job )
 }
 
 getdetailpage(){
@@ -60,8 +62,9 @@ getdetailuri(){
 	#20180831
 	#echo "$detail_a" >> detailuri.tmp
 
-	grep job_mgr_no nowdown.html|awk -F\" '{print "http://www.yoshinoya.com/baito/op71872/job"$2"/"}' >> detailuri.tmp
-
+	#grep job_mgr_no nowdown.html|awk -F\" '{print "http://www.yoshinoya.com/baito/op71872/job"$2"/"}' >> detailuri.tmp
+	#20180407
+	cat nowdown.html |grep h3|grep href|grep job|awk -F\" '{print $2}' >> detailuri.tmp
 }
 
 dwncnt=1

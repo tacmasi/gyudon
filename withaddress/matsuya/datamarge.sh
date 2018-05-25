@@ -8,8 +8,8 @@ export LC_COLLATE=ja_JP.utf8
 #copy
 dateline=$(wc -l date.csv|cut -f1 -d' ')
 echo "N = 1"
-#第1期データをコピー(半角to全角を噛ませる)
-./kana_han2zen.gawk ./data/detail$(head -1 date.csv).csv > ./data/detail.csv
+#第1期データをコピー(半角to全角を噛ませる)|店名内" R"を除去
+./kana_han2zen.gawk ./data/detail$(head -1 date.csv).csv|sed -e 's/ R/ /g' -e 's/　R/　/g' -e 's/ Ｒ/ /g' -e 's/　R/　/g' > ./data/detail.csv
 ##
 
 #処理
@@ -26,8 +26,8 @@ fieldsize=$(head -1  ./data/detail.csv|sed -e 's/ //g' -e 's/　//g' -e 's/,/ /g
 todaydate=$(head -$1 date.csv|tail -1)
 #データソートしてa.tmpへ
 sort -k1,1 -t, ./data/detail.csv >./data/a.tmp
-#todaydate分b.tmpへ(半角to全角を噛ませる)
-./kana_han2zen.gawk ./data/detail$todaydate.csv |sort -k1,1 -t, >./data/b.tmp
+#todaydate分b.tmpへ(半角to全角を噛ませる)|店名内'R'を削除
+./kana_han2zen.gawk ./data/detail$todaydate.csv |sed -e 's/ R/ /g' -e 's/　R/　/g' -e 's/ Ｒ/ /g' -e 's/　R/　/g'|sort -k1,1 -t, >./data/b.tmp
 
 #detailへtodaydate分を結合
 join -11 -21 -t, ./data/a.tmp ./data/b.tmp >./data/join1.tmp

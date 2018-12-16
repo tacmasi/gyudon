@@ -23,7 +23,7 @@ echo $(grep -A3 "勤務先" nowdetailpage.html |head -2|tail -1|sed -e 's/>/</'|
 #-20170831
 #grep  "勤務先：" nowdetailpage.html|sed 's/>/</g'|cut -d\< -f3|head -1|sed 's/\t//g'|sed 's/,//g'|sed 's/　//g' >>place.tmp
  
-grep -A2  "住所" nowdetailpage.html|head -2|tail -1|sed -e 's/>/</'|awk -F\< 'NR==1{print $3}' >>place.tmp
+grep -A2  "住所" nowdetailpage.html|head -2|tail -1|sed -e 's/>/</'|awk -F\< 'NR==1{print $3}'|sed -e 's/,/、/g' >>place.tmp
 #echo
 echo $(grep -A2  "住所" nowdetailpage.html|head -2|tail -1|sed -e 's/>/</'|awk -F\< 'NR==1{print $3}')
 

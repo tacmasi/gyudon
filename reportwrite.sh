@@ -139,7 +139,7 @@ echo "<br>">>$outputfile
 echo "<hr>">>$outputfile
 echo "時系列での各店舗時給上昇件数(対4週前比)は下記の通りです。">>$outputfile
 echo "|*Date|*吉野家[件]|*松屋[件]|*すき家[件]|上昇店舗計[件]|">>$outputfile
-for i in $(seq 0 4 60)
+for i in $(seq 0 4 240)
 do
 cat all_gyudon_colnameon.csv|awk -F, -v l="$i" 'NR==1{print} NR!=1 && $(NF-l)>$(NF-l-4){print}'|awk -F, -v l="$i" 'BEGIN{y=0;m=0;s=0}NR==1{d=$(NF-l)}$1=="吉野家"{y++} $1=="松屋"{m++} $1=="すき家"{s++} END{print "|"d"|" y"|" m"|"  s"|" NR"|" }' >>$outputfile
 done

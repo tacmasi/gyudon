@@ -26,9 +26,9 @@ echo $(grep -A2  "住所" nowdetailpage.html|head -2|tail -1|sed -e 's/>/</'|awk
 
 getpage(){
 
-	wget -q http://www.matswork.biz/op182246/alist/tst2/page$1/ -O nowdown.html
+	wget -q https://www.matswork.biz/op182246/alist/tst2/page$1/ -O nowdown.html
 	if [ $1 -eq 1 ];then
-	wget -q http://www.matswork.biz/op182246/alist/tst2/ -O nowdown.html
+	wget -q https://www.matswork.biz/op182246/alist/tst2/ -O nowdown.html
 	fi
 }
 pagecheck(){
@@ -46,7 +46,7 @@ getdetailpage(){
 getdetailuri(){
 	#詳細ページuriをget
 	#detail_a=$(grep "内容を詳しく" nowdown.html|cut -d\" -f2 | head -$1 |tail -1)
-	grep job_mgr_no nowdown.html|awk -F\" '{print "http://www.matswork.biz/op182246/job"$2"/"}' >> detailuri.tmp
+	grep job_mgr_no nowdown.html|awk -F\" '{print "https://www.matswork.biz/op182246/job"$2"/"}' >> detailuri.tmp
 }
 
 dwncnt=1

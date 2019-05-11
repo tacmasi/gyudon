@@ -13,7 +13,7 @@ getwage(){
 }
 
 getpage(){
-	wget -q http://jobs.sukiya.jp/shops?k=-\&page=$1 -O nowdown.html
+	wget --no-check-certificate -q https://jobs.sukiya.jp/shops?k=-\&page=$1 -O nowdown.html
 }
 pagecheck(){
 	dwncnt=$(grep -c "詳細" nowdown.html)
@@ -22,7 +22,7 @@ pagecheck(){
 getdetailpage(){
 	#詳細ページをget
 	detail_a=$(grep "詳細" nowdown.html|cut -d\" -f2 | head -$1 |tail -1|cut -d'?' -f1)
-	wget -q http://jobs.sukiya.jp/$detail_a -O nowdetailpage.html
+	wget --no-check-certificate -q https://jobs.sukiya.jp/$detail_a -O nowdetailpage.html
 }
 
 dwncnt=1

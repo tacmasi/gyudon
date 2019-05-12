@@ -16,9 +16,9 @@ echo $(grep -A3 "時給" nowdetailpage.html | grep \<em\> | sed -e 's/給/Y/' -e
 #-20170831
 #grep  "勤務先：" nowdetailpage.html|sed 's/：/</g'|cut -d\< -f2|head -1 >>name.tmp
 
-grep -A3 "勤務先" nowdetailpage.html |head -2|tail -1|sed -e 's/>/</'|awk -F\< 'NR==1{print $3}' >>name.tmp
+grep -A3 "勤務先" nowdetailpage.html |head -2|tail -1|sed -e 's/>/</'|awk -F\< 'NR==1{print $3}'|awk -F[ '{print $1}' |sed 's/　/ /g' >>name.tmp ###
 #echo
-echo $(grep -A3 "勤務先" nowdetailpage.html |head -2|tail -1|sed -e 's/>/</'|awk -F\< 'NR==1{print $3}')
+echo $(grep -A3 "勤務先" nowdetailpage.html |head -2|tail -1|sed -e 's/>/</'|awk -F\< 'NR==1{print $3}'|awk -F[ '{print $1}'|sed 's/　/ /g')
 #勤務地get
 #-20170831
 #grep  "勤務先：" nowdetailpage.html|sed 's/>/</g'|cut -d\< -f3|head -1|sed 's/\t//g'|sed 's/,//g'|sed 's/　//g' >>place.tmp

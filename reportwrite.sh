@@ -138,6 +138,7 @@ echo "<hr>">>$outputfile
 echo "<br>">>$outputfile
 echo "<hr>">>$outputfile
 echo "時系列での各店舗時給上昇件数(対4週前比)は下記の通りです。">>$outputfile
+echo "※吉：吉野家、松：松屋、す：すき家、↑：上昇、↓：下落" >>$outputfile
 #echo "|*Date|*吉野家[件]|*松屋[件]|*すき家[件]|上昇店舗計[件]|">>$outputfile
 echo "|*Date|*吉↑|*松↑|*す↑|*上昇計|*吉↓|*松↓|*す↓|*下落計|">>$outputfile
 for i in $(seq 0 4 240)

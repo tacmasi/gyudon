@@ -31,7 +31,9 @@ sort -k1,1 -t, ./data/detail.csv >./data/a.tmp
 
 #detailへtodaydate分を結合
 join -11 -21 -t, ./data/a.tmp ./data/b.tmp >./data/join1.tmp
-cut -d, -f1,2,3-$fieldsize,$(expr $fieldsize + 2) ./data/join1.tmp > ./data/join2.tmp
+#cut -d, -f1,2,3-$fieldsize,$(expr $fieldsize + 2) ./data/join1.tmp > ./data/join2.tmp
+#住所をすべて最新とする
+gawk -F, 'BEGIN{OFS=","}{$2=$(NF-1);$(NF-1)=$NF;$NF="nono";print}' ./data/join1.tmp|gawk -F',nono' '{print $1}' >./data/join2.tmp
 #matchしなかったもの(停止店舗)
 #元ファイルのみ
 join -11 -21 -t, -v1 ./data/a.tmp ./data/b.tmp >./data/detail_a.tmp

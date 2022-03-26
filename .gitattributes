@@ -1,4 +1,0 @@
-all_gyudon.csv filter=lfs diff=lfs merge=lfs -text
-withaddress/yoshinoya/data/detail.csv filter=lfs diff=lfs merge=lfs -text
-withaddress/matsuya/data/detail.csv filter=lfs diff=lfs merge=lfs -text
-withaddress/sukiya/data/detail.csv filter=lfs diff=lfs merge=lfs -text

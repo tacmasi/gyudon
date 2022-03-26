@@ -95,7 +95,8 @@ if [ -s ./gyudon_up.csv  ]; then
 	echo $today "において、前回集計時(" $pastday  ")以降、日中求人時給が上昇した店舗は下記" $nl "件です。" >>$outputfile
 	echo "|*Storetype|*都道府県|*上昇店舗名|*" $pastday  "時給[円]|*" $today "時給[円]|*対先週差[円]"  >>$outputfile
 	#求人停止店舗
-	cut -d, -f1,2,3,5,6,7 gyudon_up.csv |sort -t, -k1,2 |sed 's/,/|/g'|awk '{print "|" $0 "|"}' >>$outputfile
+	#cut -d, -f1,2,3,5,6,7 gyudon_up.csv |sort -t, -k1,2 |sed 's/,/|/g'|awk '{print "|" $0 "|"}' >>$outputfile
+	cut -d, -f1,2,3,7,5,8 gyudon_up.csv |sort -t, -k1,2 |sed 's/,/|/g'|awk '{print "|" $0 "|"}' >>$outputfile
 else
 	echo $today "において、" $pastday "以降日中求人時給が上昇した店舗はありません。" >>$outputfile
 fi
@@ -106,7 +107,8 @@ if [ -s ./gyudon_down.csv  ]; then
 	echo $today "において、前回集計時(" $pastday ")以降、日中求人時給が下落した店舗は下記" $nl "件です。" >>$outputfile
 	echo "|*Storetype|*都道府県|*下落店舗名|*" $pastday  "時給[円]|*" $today "時給[円]|*対先週差[円]"  >>$outputfile
 	#求人停止店舗
-	cut -d, -f1,2,3,5,6,7 gyudon_down.csv |sort -t, -k1,2 |sed 's/,/|/g'|awk '{print "|" $0 "|"}' >>$outputfile
+#	cut -d, -f1,2,3,5,6,7 gyudon_down.csv |sort -t, -k1,2 |sed 's/,/|/g'|awk '{print "|" $0 "|"}' >>$outputfile
+	cut -d, -f1,2,3,7,5,8 gyudon_down.csv |sort -t, -k1,2 |sed 's/,/|/g'|awk '{print "|" $0 "|"}' >>$outputfile
 else
 	echo $today "において、前回集計時(" $pastday ")以降日中求人時給が下落した店舗はありません。" >>$outputfile
 fi
@@ -116,9 +118,9 @@ echo "<hr>">>$outputfile
 if [ -s ./gyudon_new.csv  ]; then
 	nl=$(awk 'END{print NR}' gyudon_new.csv)
 	echo $today "において、前回集計時(" $pastday ")以降日中求人を開始した店舗は下記" $nl "件です。" >>$outputfile
-	echo "|*Storetype|*都道府県|*新規求人店舗名|*時給|" >>$outputfile
+	echo "|*Storetype|*都道府県|*新規求人店舗名|*時給[円]|" >>$outputfile
 	#求人停止店舗
-	cut -d, -f1,2,3,6 gyudon_new.csv |sort -t, -k1,2 |sed 's/,/|/g'|awk '{print "|" $0 "|"}' >>$outputfile
+	cut -d, -f1,2,3,5 gyudon_new.csv |sort -t, -k1,2 |sed 's/,/|/g'|awk '{print "|" $0 "|"}' >>$outputfile
 else
 	echo $today "において、前回集計時(" $pastday ")以降日中求人を開始した店舗はありません。" >>$outputfile
 fi
@@ -127,9 +129,9 @@ echo "<hr>">>$outputfile
 if [ -s ./gyudon_stop.csv  ]; then
 	nl=$(awk 'END{print NR}' gyudon_stop.csv)
 	echo $today "において、前回集計時(" $pastday ")以降日中求人を停止した店舗は下記" $nl "件です。" >>$outputfile
-	echo "|*Storetype|*都道府県|*求人停止店舗名|" >>$outputfile
+	echo "|*Storetype|*都道府県|*求人停止店舗名|"停止前時給[円]"" >>$outputfile
 	#求人停止店舗
-	cut -d, -f1,2,3 gyudon_stop.csv |sort -t, -k1,2 |sed 's/,/|/g'|awk '{print "|" $0 "|"}' >>$outputfile
+	cut -d, -f1,2,3,5 gyudon_stop.csv |sort -t, -k1,2 |sed 's/,/|/g'|awk '{print "|" $0 "|"}' >>$outputfile
 else
 	echo $today "において、前回集計時(" $pastday ")以降日中求人を停止した店舗はありません。" >>$outputfile
 fi
@@ -141,12 +143,29 @@ echo "時系列での各店舗時給上昇件数(対4週前比)は下記の通�
 echo "※吉：吉野家、松：松屋、す：すき家、↑：上昇、↓：下落" >>$outputfile
 #echo "|*Date|*吉野家[件]|*松屋[件]|*すき家[件]|上昇店舗計[件]|">>$outputfile
 echo "|*Date|*吉↑|*松↑|*す↑|*上昇計|*吉↓|*松↓|*す↓|*下落計|">>$outputfile
-for i in $(seq 0 4 240)
+for i in $(seq 1 4 241)
 do
-#cat all_gyudon_colnameon.csv|awk -F, -v l="$i" 'NR==1{print} NR!=1 && $(NF-l)!="NA" && $(NF-l-4)!="NA" && $(NF-l)>$(NF-l-4){print}'|awk -F, -v l="$i" 'BEGIN{y=0;m=0;s=0}NR==1{d=$(NF-l)}$1=="吉野家"{y++} $1=="松屋"{m++} $1=="すき家"{s++} END{print "|"d"|" y"|" m"|"  s"|" NR"|" }' >>$outputfile
-up_num=$(cat all_gyudon_colnameon.csv|awk -F, -v l="$i" 'NR==1{print} NR!=1 && $(NF-l)!="NA" && $(NF-l-4)!="NA" && $(NF-l)>$(NF-l-4){print}'|awk -F, -v l="$i" 'BEGIN{y=0;m=0;s=0}NR==1{d=$(NF-l)}$1=="吉野家"{y++} $1=="松屋"{m++} $1=="すき家"{s++} END{print "|"d"|" y"|" m"|"  s"|" y+m+s"|" }')
-down_num=$(cat all_gyudon_colnameon.csv|awk -F, -v l="$i" 'NR==1{print} NR!=1 && $(NF-l)!="NA" && $(NF-l-4)!="NA" && $(NF-l)<$(NF-l-4){print}'|awk -F, -v l="$i" 'BEGIN{y=0;m=0;s=0}NR==1{d=$(NF-l)}$1=="吉野家"{y++} $1=="松屋"{m++} $1=="すき家"{s++} END{print y"|" m"|"  s"|" y+m+s"|" }')
-echo $up_num$down_num >> $outputfile
+	refD=$(tail -$i ./withaddress/sukiya/date.csv|head -1)
+	prevD=$(tail -$((i+4)) ./withaddress/sukiya/date.csv|head -1)
+	echo $refD
+	up_num=$(cat all_gyudon.csv|awk -F, --assign refD="$refD" --assign prevD="$prevD" 'BEGIN{name="dum"; wage=0; date=0; ypl=0;mpl=0;spl=0; yms=0;mms=0;sms=0}
+	{
+		if($6==prevD){name=$3; wage=$5; date=$6} #4週前店舗名,時給,date
+		if($6==refD && $3==name){
+			if($5 > wage){
+				if($1=="吉野家"){ypl++}
+				if($1=="松屋"){mpl++}
+				if($1=="すき家"){spl++}
+				} #up
+			if($5 < wage){
+				if($1=="吉野家"){yms++}
+				if($1=="松屋"){mms++}
+				if($1=="すき家"){sms++}
+				} #down
+		}
+	}
+	END{print "|"refD"|" ypl"|" mpl"|"  spl"|" ypl+mpl+spl"|" yms"|" mms"|"  sms"|" yms+mms+sms"|" }')
+echo $up_num >> $outputfile
 done
 echo "<hr>">>$outputfile
 #########対前月比

@@ -17,33 +17,33 @@ rm tmp
 ####
 echo "all_gyudon.csv に時給データを保存しました"
 
-##colname
-hh1=$(awk -v ORS="," 'BEGIN{print "storetype,prefecture,storename,address"} {print $0}' ./withaddress/sukiya/date.csv )
-echo ${hh1/%?/} >all_gyudon_colnameon.csv
-cat all_gyudon.csv >> all_gyudon_colnameon.csv
-echo "all_gyudon_colnameon.csv に列名入りデータを保存しました"
 
 #######
-#列番号取得
-lastcol=$(head -1 all_gyudon.csv|awk -F, '{print NF}')
-pastcol=$(expr $lastcol - 1)
-past4weekcol=$(expr $lastcol - 4)
+#データクリア
+rm ./gyudon_up.csv  ./gyudon_down.csv ./gyudon_new.csv  ./gyudon_stop.csv 
+touch ./gyudon_up.csv  ./gyudon_down.csv ./gyudon_new.csv  ./gyudon_stop.csv 
 
-echo "lastcol=" $lastcol
-echo "pastcol=" $pastcol
-echo "past4weekcol=" $past4weekcol
-
-#上昇取得(+1〜+650yen)
-awk -F, '{print $1 "," $2 "," $3 "," $4 "," $'"$pastcol"' "," $'"$lastcol"' "," $'"$lastcol"' - $'" $pastcol"'}' all_gyudon.csv | awk -F, '{if($7>0 && $7 < 650) print $0} ' > gyudon_up.csv
+today=$(tail -1 ./withaddress/sukiya/date.csv)
+pastday=$(tail -2 ./withaddress/sukiya/date.csv|head -1)
+##all_gyudon.csv: storetype, prefecure, name, address, wage, date
+#上昇取得()
+gawk --assign today=$today --assign pastday=$pastday -F, 'BEGIN{upcnt=0; dwncnt=0; begincnt=0; stopcnt=0; name="dum"; wage=0; date=0 } 
+{ if(name!=$3 && date==pastday && date>$6){print dat >> "gyudon_stop.csv"} #stop
+	if($6==today){ #今週データ
+		if($3!=name || ($3==name && date<pastday)){print >> "gyudon_new.csv"} #先週データがない場合:new
+		if($3==name && date==pastday){ #同店舗かつ先週データがある場合
+			if($5>wage){print $0 "," wage "," ($5)-wage  >> "gyudon_up.csv"} #up
+			if($5<wage){print $0 "," wage "," ($5)-wage >> "gyudon_down.csv"} #down 
+		}
+	}
+	name=$3; wage=$5; date=$6; dat=$0  #データ格納
+}
+' all_gyudon.csv
 echo "時給上昇店舗を ./gyudon_up.csv に保存しました"
-
-#下落取得(-650〜-1yen)
-awk -F, '{print $1 "," $2 "," $3 "," $4 "," $'"$pastcol"' "," $'"$lastcol"' "," $'"$lastcol"' - $'" $pastcol"'}' all_gyudon.csv | awk -F, '{if($1<7 && $7 > -650) print $0} ' > gyudon_down.csv
+#下落取得()
 echo "時給下落店舗を ./gyudon_down.csv に保存しました"
 
-#新規求人店舗取得(+650yen〜)
-awk -F, '{print $1 "," $2 "," $3 "," $4 "," $'"$pastcol"' "," $'"$lastcol"' "," $'"$lastcol"' - $'" $pastcol"'}' all_gyudon.csv | awk -F, '{if($7 > 650) print $0} ' > gyudon_new.csv
+#新規求人店舗取得()
 echo "新規求人開始店舗を ./gyudon_new.csv に保存しました"
-#求人停止取得(〜-650yen)
-awk -F, '{print $1 "," $2 "," $3 "," $4 "," $'"$pastcol"' "," $'"$lastcol"' "," $'"$lastcol"' - $'" $pastcol"'}' all_gyudon.csv | awk -F, '{if($7 < -650) print $0} ' > gyudon_stop.csv
+#求人停止取得()
 echo "求人停止店舗を ./gyudon_stop.csv に保存しました"

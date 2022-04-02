@@ -7,4 +7,4 @@ rm *.tmp
 ./allgyudonwage.sh
 ./reportwrite.sh
 #./med.sh
-./unique.sh
+#./unique.sh

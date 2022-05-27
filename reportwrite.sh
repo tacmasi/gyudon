@@ -18,7 +18,8 @@ totalq=(0 0 0 0)
 #totalstorefunc(1,2)#1:storetype, #2:id:0:吉野家,1:松屋,2:すき家
 totalstorefunc(){
 	echo "var=" $1 $2 $ncol
-	totalq[$2]=$(awk -F, '{if($1=='"$1"' && $"'$ncol'"!="NA") print NR}' all_gyudon.csv|wc -l)
+#	totalq[$2]=$(awk -F, '{if($1=='"$1"' && $"'$ncol'"!="NA") print NR}' all_gyudon.csv|wc -l)
+	totalq[$2]=$(grep $today all_gyudon.csv|awk -F, '{if($1=='"$1"' && $"'$ncol'"!="NA") print NR}' |wc -l)
 }
 totalstorefunc "\"吉野家\"" 0
 totalstorefunc "\"松屋"\" 1

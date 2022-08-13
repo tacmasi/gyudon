@@ -106,7 +106,7 @@ echo "<hr>">>$outputfile
 if [ -s ./gyudon_down.csv  ]; then
 	nl=$(awk 'END{print NR}' gyudon_down.csv)
 	echo $today "において、前回集計時(" $pastday ")以降、日中求人時給が下落した店舗は下記" $nl "件です。" >>$outputfile
-	echo "|*Storetype|*都道府県|*下落店舗名|*" $pastday  "時給[円]|*" $today "時給[円]|*対先週差[円]"  >>$outputfile
+	echo "|*Storetype|*都道府県|*下落店舗名|*" $today  "時給[円]|*" $pastday "時給[円]|*対先週差[円]"  >>$outputfile
 	#求人停止店舗
 #	cut -d, -f1,2,3,5,6,7 gyudon_down.csv |sort -t, -k1,2 |sed 's/,/|/g'|awk '{print "|" $0 "|"}' >>$outputfile
 	cut -d, -f1,2,3,7,5,8 gyudon_down.csv |sort -t, -k1,2 |sed 's/,/|/g'|awk '{print "|" $0 "|"}' >>$outputfile

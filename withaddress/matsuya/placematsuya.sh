@@ -1,5 +1,7 @@
 #!/bin/bash
 rm *.tmp *.html
+touch wage.tmp name.html place.tmp today_t.tmp
+
 
 todaydate=$(date +%Y%m%d)
 getwage(){
@@ -7,28 +9,34 @@ getwage(){
 #20170831
 #grep -A3 "給与" nowdetailpage.html|grep "時給"|head -1|sed 's/ //g'|sed 's/　//g'|sed 's/,//g'|sed 's/給/Y/g'|sed 's/円/Y/g'|cut -dY -f2 >>wage.tmp
 
-grep -A3 "時給" nowdetailpage.html | grep \<em\> | sed -e 's/給/Y/' -e 's/円/Y/' -e 's/,//'|awk -F'Y' 'NR==1{print $2 } ' >> wage.tmp
+wage1=$(grep -A3 "時給" nowdetailpage.html | grep \<em\> | sed -e 's/給/Y/' -e 's/円/Y/' -e 's/,//'|awk -F'Y' 'NR==1{print $2 } ')
+echo $wage1 >> wage.tmp
+echo $wage1
 #echo
-echo $(grep -A3 "時給" nowdetailpage.html | grep \<em\> | sed -e 's/給/Y/' -e 's/円/Y/' -e 's/,//'|awk -F'Y' 'NR==1{print $2 } ')
+#echo $(grep -A3 "時給" nowdetailpage.html | grep \<em\> | sed -e 's/給/Y/' -e 's/円/Y/' -e 's/,//'|awk -F'Y' 'NR==1{print $2 } ')
 #店舗名称get
 #20170831
 #	grep  "勤務先：" nowdetailpage.html|sed 's/：/</g'|cut -d\< -f2|head -1 >>name.tmp
-grep -A3 "勤務先" nowdetailpage.html |head -2|tail -1|sed -e 's/>/</'|awk -F\< 'NR==1{print $3}' >>name.tmp
-#echo
-echo $(grep -A3 "勤務先" nowdetailpage.html |head -2|tail -1|sed -e 's/>/</'|awk -F\< 'NR==1{print $3}')
+tenname1=$(grep -A3 "勤務先" nowdetailpage.html |head -2|tail -1|sed -e 's/>/</'|awk -F\< 'NR==1{print $3}')
+echo $tenname1 >> name.tmp
+echo $tenname1
 #勤務地get
 #20170831
 #	grep  "勤務先：" nowdetailpage.html|sed 's/>/</g'|cut -d\< -f3|head -1|sed 's/\t//g'|sed 's/　//g'|sed 's/,//g' >>place.tmp
-grep -A5  "住所" nowdetailpage.html|grep li|sed -e 's/>/</'|awk -F\< 'NR==1{print $3}'|sed 's/,/、/g' >>place.tmp
+address1=$(grep -A5  "住所" nowdetailpage.html|grep li|sed -e 's/>/</'|awk -F\< 'NR==1{print $3}'|sed 's/,/、/g')
+echo $address1 >> place.tmp
+echo $address1
 #echo
-echo $(grep -A5  "住所" nowdetailpage.html|grep li|sed -e 's/>/</'|awk -F\< 'NR==1{print $3}')
+echo $tenname1,$address1,$wage1 >> today_t.tmp
+tenname1=0
+wage1=0
 }
 
 getpage(){
 
-	wget -q https://www.matswork.biz/op182246/alist/tst2/page$1/ -O nowdown.html
+	wget -q https://www.matswork.biz/op182246/alist/tst2_stp4/page$1/ -O nowdown.html
 	if [ $1 -eq 1 ];then
-	wget -q https://www.matswork.biz/op182246/alist/tst2/ -O nowdown.html
+	wget -q https://www.matswork.biz/op182246/alist/tst2_stp4/ -O nowdown.html
 	fi
 }
 pagecheck(){
@@ -82,7 +90,7 @@ do
 done
 #	cnt=$(expr $cnt + 1)
 
-paste -d, name.tmp place.tmp wage.tmp > today_t.tmp
+#paste -d, name.tmp place.tmp wage.tmp > today_t.tmp
 #重複削除(同一店舗名では賃金最低の求人を残す)
 cat today_t.tmp |sort -t, -k 1,1 -k 3n |awk -F'[,]' '!a[$1]++ {print $0}' > ./data/detail$todaydate.csv
 echo $todaydate >>date.csv

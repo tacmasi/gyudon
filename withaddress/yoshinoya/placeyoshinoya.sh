@@ -2,31 +2,19 @@
 rm *.tmp *.html
 
 todaydate=$(date +%Y%m%d)
+touch today_t.tmp
 getwage(){
 #時給get
-#-20161022
-#grep -A3 "給与" nowdetailpage.html|grep "時給"|head -1|sed 's/ //g'|sed 's/　//g'|sed 's/,//g'|sed 's/給/Y/g'|sed 's/円/Y/g'|cut -dY -f2 >>wage.tmp
-#-20170831
-#grep -A3 "給与" nowdetailpage.html|grep "時給"|grep "em"|sed 's/ //g'|sed 's/　//g'|sed 's/,//g'|sed 's/給/Y/g'|sed 's/円/Y/g'|cut -dY -f2 >>wage.tmp
-grep -A3 "時給" nowdetailpage.html | grep \<em\> | sed -e 's/給/Y/' -e 's/円/Y/' -e 's/,//'|awk -F'Y' 'NR==1{print $2 } '  >> wage.tmp
-#echo
-echo $(grep -A3 "時給" nowdetailpage.html | grep \<em\> | sed -e 's/給/Y/' -e 's/円/Y/' -e 's/,//'|awk -F'Y' 'NR==1{print $2 } ')
-
+nowwage1=$(grep -A3 "時給" nowdetailpage.html | grep \<em\> | sed -e 's/給/Y/' -e 's/円/Y/' -e 's/,//'|awk -F'Y' 'NR==1{print $2 } ')
+echo $nowwage1
 #店舗名get
-#-20170831
-#grep  "勤務先：" nowdetailpage.html|sed 's/：/</g'|cut -d\< -f2|head -1 >>name.tmp
-
-grep -A3 "勤務先" nowdetailpage.html |head -2|tail -1|sed -e 's/>/</'|awk -F\< 'NR==1{print $3}'|awk -F[ '{print $1}' |sed 's/　/ /g' >>name.tmp ###
-#echo
-echo $(grep -A3 "勤務先" nowdetailpage.html |head -2|tail -1|sed -e 's/>/</'|awk -F\< 'NR==1{print $3}'|awk -F[ '{print $1}'|sed 's/　/ /g')
+nowname1=$(grep -A3 "勤務先" nowdetailpage.html |head -2|tail -1|sed -e 's/>/</'|awk -F\< 'NR==1{print $3}'|awk -F[ '{print $1}' |sed 's/　/ /g')
+echo $nowname1
 #勤務地get
-#-20170831
-#grep  "勤務先：" nowdetailpage.html|sed 's/>/</g'|cut -d\< -f3|head -1|sed 's/\t//g'|sed 's/,//g'|sed 's/　//g' >>place.tmp
- 
-grep -A4  "住所" nowdetailpage.html|grep li|sed -e 's/>/</'|awk -F\< 'NR==1{print $3}'|sed -e 's/,/、/g' >>place.tmp
-#echo
-echo $(grep -A4  "住所" nowdetailpage.html|grep li|sed -e 's/>/</'|awk -F\< 'NR==1{print $3}')
+nowplace1=$(grep -A4  "住所" nowdetailpage.html|grep li|sed -e 's/>/</'|awk -F\< 'NR==1{print $3}'|sed -e 's/,/、/g')
+echo $nowplace1
 
+echo $nowname1,$nowplace1,$nowwage1>> today_t.tmp
 }
 
 getpage(){
@@ -100,7 +88,6 @@ do
 done
 #	cnt=$(expr $cnt + 1)
 
-paste -d, name.tmp place.tmp wage.tmp > today_t.tmp
 #重複削除(同一店舗名では賃金最低の求人を残す)
 cat today_t.tmp |sort -t, -k 1,1 -k 3n |awk -F'[,]' '!a[$1]++ {print $0}' > ./data/detail$todaydate.csv
 echo $todaydate >>date.csv

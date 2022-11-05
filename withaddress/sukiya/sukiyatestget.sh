@@ -2,14 +2,16 @@
 rm *.tmp *.html
 
 todaydate=$(date +%Y%m%d)
+touch ./data/detail$todaydate.csv
 getwage(){
 #時給一覧get
 #	grep "時給&nbsp;" nowdetailpage.html|sed -e 's/&nbsp;/>/g'|sed -e 's/円/>/g'|cut -d'>' -f3 |sed 's/,//g'>>wage.tmp
-	grep "時給&nbsp" nowdetailpage.html|sed -e 's/;/円/g' -e 's/,//g'|awk -F'円' 'NR==1{print $2}'>>wage.tmp
+nowwage1=$(grep "時給&nbsp" nowdetailpage.html|sed -e 's/;/円/g' -e 's/,//g'|awk -F'円' 'NR==1{print $2}')
 #店舗一覧get
-	grep -A1 "募集店舗" nowdetailpage.html|tail -1|sed -e 's/>/</g'|cut -d'<' -f3 >>name.tmp
+nowname1=$(grep -A1 "募集店舗" nowdetailpage.html|tail -1|sed -e 's/>/</g'|cut -d'<' -f3)
 #勤務地get
-	grep -A2 "勤務地" nowdetailpage.html|tail -1|sed -e 's/\s//g'|sed -e 's/,/_/g'|sed 's/&nbsp;//g' >>place.tmp
+nowplace1=$(grep -A2 "勤務地" nowdetailpage.html|tail -1|sed -e 's/\s//g'|sed -e 's/,/_/g'|sed 's/&nbsp;//g')
+echo $nowname1,$nowplace1,$nowwage1>> ./data/detail$todaydate.csv
 }
 
 getpage(){
@@ -46,7 +48,6 @@ do
 	cnt=$(expr $cnt + 1)
 	rm nowdown.html
 done
-paste -d, name.tmp place.tmp wage.tmp > ./data/detail$todaydate.csv
 echo $todaydate >>date.csv
 
 #rm *.tmp *.html

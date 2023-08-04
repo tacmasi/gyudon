@@ -36,6 +36,7 @@
 <link rel="stylesheet" type="text/css" media="all" href="/javascripts/jqtransformplugin/jqtransform.css" />
 <link rel="stylesheet" type="text/css" media="screen, tv, print" href="/stylesheets/jquery.fancybox-1.3.4.css" />
 <link rel="stylesheet" type="text/css" media="print" href="/common/css/print.css" />
+<link rel="stylesheet" type="text/css" media="screen,tv,print" href="/assets/css/common.css?rev=202101151725">
 <script type="text/javascript" src="/common/lib/jquery.js"></script>
 <script type="text/javascript" src="/common/lib/rollover.js"></script>
 <script type="text/javascript" src="/common/lib/jquery.socialbutton.js"></script>
@@ -68,16 +69,36 @@
   });
 </script>
 <script></script>
+
+<script type="text/javascript">
+  $(function(){
+  $('#header').load('/header.html'); 
+  $('#footer').load('/footer.html'); 	
+  });
+</script>
+
+<script type="text/javascript">	
+var windowWidth = $(window).width();
+var windowSm = 768;
+if (windowWidth <= windowSm) {
+    //横幅640px以下（スマホの場合の処理）
+} else {	
+$(window).scroll(function () {
+  if($(window).scrollTop() > 20) {
+    $('#header').addClass('fixed');
+  } else {
+    $('#header').removeClass('fixed');
+  }
+});
+}
+</script>
 </head>
 
 <body id="menu_in_title" class="menu menu_in menu_title">
 <!-- Google Tag Manager (noscript) -->
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5S9SMPZ"
 height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PJXG2PC"
-height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
-
 <a name="pagetop" id="pagetop"></a>
 <div id="wrapper">
 <!-- Google Tag Manager -->
@@ -96,45 +117,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <!-- End Google Tag Manager -->
 
 <!-- ===== /common/include/header.html ===== -->
-<div id="header_wrap">
 <div id="header">
-
-<div class="header_nav clr">
-<div class="lc">
-<p id="hd_logo" class="hd"><a href="http://www.sukiya.jp/">すき家</a></p>
-<!-- /lc --></div>
-<div class="rc">
-<div class="sec_nav_func clr">
-
-<div class="header_inner clr">
-<ul class="clr">
-<li class="current">日本語</li>
-<li><a href="https://www.sukiya.jp/en/">English</a></li>
-<li><a href="https://www.sukiya.jp/cn/">中文</a></li>
-</ul>
-<!-- /header_inner --></div>
-
-<!-- /sec_nav_func --></div>
-
-<ul id="gnav" class="clr">
-<li id="gnav_menu" class="hd"><a href="http://www.sukiya.jp/menu/">メニュー</a></li>
-<li id="gnav_search_shop" class="hd"><a href="http://maps.sukiya.jp/p/zen004/" target="_blank" onClick="_gaq.push(['_trackEvent', 'pc', 'gnav', 'gnav_shop']);">店舗を探す</a></li>
-<li id="gnav_howto" class="hd"><a href="http://www.sukiya.jp/howto/">How To</a></li>
-<li id="gnav_jobs" class="hd"><a href="http://jobs.sukiya.jp/">採用情報</a></li>
-<!-- /gnav --></ul>
-
-<ul id="gnav_r" class="clr">
-<li id="gnav_menu" class="hd"><a class="inquiry" href="//contact.sukiya.jp/inquiry/">お問い合わせ</a></li>
-<li id="gnav_jobs" class="hd"><a class="faq" href="http://www.sukiya.jp/faq.html">よくあるご質問</a></li>
-<!-- /gnav_r --></ul>
-
-
-<!-- /rc --></div>
-
-<!-- /header_nav --></div>
 <!-- /header --></div>
-<!-- /header_wrap --></div>
 <!-- ===== /common/include/header.html ===== -->
+
 
 <!-- ===== /common/include/lnav ===== -->
 <div id="local_nav">
@@ -164,7 +150,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <div class="facebook_like"></div>
 </div>
 <div class="sns_twitter">
-<a href="http://twitter.com/share" class="twitter-share-button" data-count="none" data-lang="ja">ツイート</a><script type="text/javascript" src="//platform.twitter.com/widgets.js"></script>
+<!-- <a href="http://twitter.com/share" class="twitter-share-button" data-count="none" data-lang="ja">ツイート</a> -->
+<script type="text/javascript" src="//platform.twitter.com/widgets.js"></script>
 </div>
 <div class="sns_addthis">
 <div class="addthis_toolbox addthis_default_style">
@@ -274,25 +261,12 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </div>
 
 
-<p class="pagetop"><a href="#pagetop">ページの先頭へ</a></p>
 <!-- /container --></div>
 <!-- /contents_inner --></div>
-<div class="sec_ft_nav clr">
-<ul class="ft_nav">
-<li class="first"><a href="http://www.sukiya.jp/about/">すき家の取り組み</a></li>
-<li><a href="http://www.sukiya.jp/company.html">企業情報</a></li>
-<li><a href="http://www.zensho.co.jp/jp/index.html" target="_blank" onClick="_gaq.push(['_trackEvent', 'pc', 'ftnav', 'ftnav_cojp']);">ゼンショーグループ</a></li>
-<li><a href="/aboutsite.html">このサイトについて</a></li>
-<li><a href="http://www.sukiya.jp/privacy.html">個人情報保護方針</a></li>
-<li><a href="/terms.html">会員利用規約</a></li>
-<li><a href="/sitemap.html">サイトマップ</a></li>
-<!-- /ft_nav --></ul>
-<p id="ft_logo" class="hd"><a href="http://www.zensho.co.jp/jp/index.html" target="_blank" onClick="_gaq.push(['_trackEvent', 'pc', 'ftnav', 'ftlogo_cojp']);" title="ZENSHO">ZENSHO</a></p>
-<!-- /sec_ft_nav --></div><!-- ===== /common/include/sec_ft_nav.html ===== -->
+<!-- ===== /common/include/sec_ft_nav.html ===== -->
 <!-- /contents --></div>
 <!-- ===== /common/include/footer.html ===== -->
 <div id="footer">
-<p id="copyright">Copyright &copy; SUKIYA CO.,LTD. All rights reserved.</p>
 <!-- /footer --></div><!-- ===== /common/include/footer.html ===== -->
 
 <!-- /wrapper --></div>

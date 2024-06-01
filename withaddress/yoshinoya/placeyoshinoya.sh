@@ -6,6 +6,13 @@ touch today_t.tmp
 getwage(){
 #時給get
 nowwage1=$(grep -A3 "時給" nowdetailpage.html | grep \<em\> | sed -e 's/給/Y/' -e 's/円/Y/' -e 's/,//'|awk -F'Y' 'NR==1{print $2 } ')
+#吉野家が深夜手当が加算された時給をWEBに掲載する問題への対処(20240601-)
+if [ $(grep "割増手当てを含む" nowdetailpage.html|wc -l) -gt 0 ]; then
+	#nowwage1=$(echo "$nowwage1 / 1.25"|bc)
+	echo "時給欄が深夜時給掲載のため 本文中の通常時間時給を抜出"
+	nowwage1=$(grep "通常時間" nowdetailpage.html -a3|grep "一般"|tail -1|sed -e 's/円/Y/' -e 's/,//' -e 's/時給/Y/'|awk -F'Y' 'NR==1{print $2}')
+fi
+##↑対処
 echo $nowwage1
 #店舗名get
 nowname1=$(grep -A3 "勤務先" nowdetailpage.html |head -2|tail -1|sed -e 's/>/</'|awk -F\< 'NR==1{print $3}'|awk -F[ '{print $1}' |sed 's/　/ /g')

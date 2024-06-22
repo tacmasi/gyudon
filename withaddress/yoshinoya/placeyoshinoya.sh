@@ -29,11 +29,11 @@ getpage(){
 #変更20161022〜
 	#wget -q http://www.baitoru.com/op71872/alist/tst2_btp1/wrd-/page$1/ -O nowdown.html
 	if [ $1 -eq 1 ];then	
-	#wget -q  http://www.yoshinoya.com/baito/op71872/alist/tst2_btp1/wrd-/ -O nowdown.html
-	wget -q https://www.baitoru.com/cjlist71872/tst2/btp1/ -O nowdown.html
+	wget -q  http://www.yoshinoya.com/baito/op71872/alist/tst2_btp1/ -O nowdown.html
+#	wget -q https://www.baitoru.com/cjlist71872/tst2/btp1/ -O nowdown.html
 	else
-		#wget -q  http://www.yoshinoya.com/baito/op71872/alist/tst2_btp1/wrd-/page$1/ -O nowdown.html
-	wget -q  https://www.baitoru.com/cjlist71872/tst2/btp1/page$1/ -O nowdown.html
+		wget -q  http://www.yoshinoya.com/baito/op71872/alist/tst2_btp1/page$1/ -O nowdown.html
+	#wget -q  https://www.baitoru.com/cjlist71872/tst2/btp1/page$1/ -O nowdown.html
 	fi
 }
 pagecheck(){
@@ -62,8 +62,9 @@ getdetailuri(){
 	#grep job_mgr_no nowdown.html|awk -F\" '{print "http://www.yoshinoya.com/baito/op71872/job"$2"/"}' >> detailuri.tmp
 	#20180407
 	#cat nowdown.html |grep h3|grep href|grep job|awk -F\" '{print $2}' >> detailuri.tmp
+	cat nowdown.html |grep h3|grep href|grep job|awk -F\" '{print $2}' >> detailuri.tmp
 	#20240622
-	cat nowdown.html |grep h3|grep href|grep job|awk -F\" '{print "http://www.baitoru.com" $4}' >> detailuri.tmp
+	#cat nowdown.html |grep h3|grep href|grep job|awk -F\" '{print "http://www.baitoru.com" $4}' >> detailuri.tmp
 }
 
 dwncnt=1

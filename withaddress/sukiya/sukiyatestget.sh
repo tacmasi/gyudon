@@ -22,9 +22,7 @@ getpage(){
 #	wget --no-check-certificate -q https://jobs.sukiya.jp/shops?k=-\&page=$1 -O nowdown.html
 	echo get https://work.sukiya.jp/brand-jobfind/area/All?page=$1
 	wget --no-check-certificate -q https://work.sukiya.jp/brand-jobfind/area/All?page=$1 -O nowdown.html
-	sleep 3s
-	echo sleep 3sec...
-}
+	}
 pagecheck(){
 	dwncnt=$(grep -c "詳細" nowdown.html)
 }
@@ -51,6 +49,8 @@ do
 	while [ $dwncnt -ne 0 ]
 	do
 		getdetailpage $dwncnt
+		sleep 1s
+		echo sleep 1sec...
 		getwage
 		dwncnt=$(expr $dwncnt - 1)
 		rm nowdetailpage.html

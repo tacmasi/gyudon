@@ -49,6 +49,7 @@ pagecheck(){
 getdetailpage(){
 	#詳細ページをget
 	wget -q $1 -O nowdetailpage.html
+	sleep 1s
 }
 
 getdetailuri(){

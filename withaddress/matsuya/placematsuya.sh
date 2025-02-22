@@ -43,7 +43,9 @@ pagecheck(){
 		#詳細記載URL
 	#-20170831
 	#dwncnt=$(grep -c "内容を詳しく" nowdown.html)
-	dwncnt=$(grep -c job_mgr_no nowdown.html)
+	#-202502
+	#dwncnt=$(grep -c job_mgr_no nowdown.html)
+	dwncnt=$(grep -c "詳しく見る" nowdown.html)
 }
 
 getdetailpage(){
@@ -55,7 +57,8 @@ getdetailpage(){
 getdetailuri(){
 	#詳細ページuriをget
 	#detail_a=$(grep "内容を詳しく" nowdown.html|cut -d\" -f2 | head -$1 |tail -1)
-	grep job_mgr_no nowdown.html|awk -F\" '{print "https://www.matswork.biz/op182246/job"$2"/"}' >> detailuri.tmp
+	#grep job_mgr_no nowdown.html|awk -F\" '{print "https://www.matswork.biz/op182246/job"$2"/"}' >> detailuri.tmp
+	grep -B2 "詳しく見る" nowdown.html|grep href|awk -F\" '{print $2}' >> detailuri.tmp
 }
 
 dwncnt=1

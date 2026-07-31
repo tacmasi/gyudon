@@ -56,8 +56,8 @@ do
 		rm nowdetailpage.html
 	done
 	echo "cnt=$cnt"
-	echo sleep 2sec...
-	sleep 2s
+	echo sleep 1sec...
+	sleep 1s
 	cnt=$(expr $cnt + 1)
 	rm nowdown.html
 done
